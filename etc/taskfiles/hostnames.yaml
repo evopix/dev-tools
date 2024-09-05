@@ -1,0 +1,28 @@
+version: "3"
+
+vars:
+  HOSTS_FILE: '{{if eq OS "windows"}}C:/Windows/System32/drivers/etc/hosts{{else}}/etc/hosts{{end}}'
+
+tasks:
+  init:
+    internal: true
+    desc: Add hostnames in hosts file
+    vars:
+      HOSTNAMES: 
+        sh: cat hostnames.txt
+    cmds:
+      - for: { var: HOSTNAMES, as: HOSTNAME}
+        task: add-hostname
+        vars:
+          HOSTNAME: "{{ .HOSTNAME }}"
+
+  add-hostname:
+    run: always
+    internal: true
+    label: add-hostname '{{ .HOSTNAME }}'
+    desc: Adds a single hostname to the hosts file
+    status:
+      - rg '{{ .HOSTNAME }}' {{ .HOSTS_FILE }}
+    cmds:
+      - |-
+        sudo sh -c 'echo "127.0.0.1   {{ .HOSTNAME }}$BASE_HOSTNAME     # Added by dev-tools" >> {{ .HOSTS_FILE }}'

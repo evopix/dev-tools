@@ -1,0 +1,4 @@
+hostnames.txt
+Taskfile.yaml
+compose-overrides.yaml
+.env.local

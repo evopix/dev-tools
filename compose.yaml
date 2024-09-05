@@ -1,0 +1,39 @@
+services:
+  traefik:
+    image: ${DOCKER_REGISTRY:-registry.hub.docker.com}/library/traefik:v3.1
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+      - "8080:8080"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ./etc/traefik/config:/etc/traefik/configuration
+      - ./etc/traefik/certs:/etc/traefik/certs
+    environment:
+      TRAEFIK_LOG: true
+      TRAEFIK_ACCESSLOG: true
+      TRAEFIK_API_INSECURE: true
+      TRAEFIK_ENTRYPOINTS_WEB: true
+      TRAEFIK_ENTRYPOINTS_WEB_ADDRESS: 80
+      TRAEFIK_ENTRYPOINTS_WEB_HTTP_REDIRECTIONS_ENTRYPOINT_TO: websecure
+      TRAEFIK_ENTRYPOINTS_WEB_HTTP_REDIRECTIONS_ENTRYPOINT_SCHEME: https
+      TRAEFIK_ENTRYPOINTS_WEB_HTTP_REDIRECTIONS_ENTRYPOINT_PERMANENT: true
+      TRAEFIK_ENTRYPOINTS_WEBSECURE: true
+      TRAEFIK_ENTRYPOINTS_WEBSECURE_ADDRESS: 443
+      TRAEFIK_ENTRYPOINTS_WEBSECURE_FORWARDEDHEADERS_INSECURE: true
+      TRAEFIK_ENTRYPOINTS_WEBSECURE_FORWARDEDHEADERS_TRUSTEDIPS: 127.0.0.1/32,10.0.0.0/8,192.168.0.0/16,172.16.0.0/12
+      TRAEFIK_PROVIDERS_DOCKER: true
+      TRAEFIK_PROVIDERS_DOCKER_NETWORK: ${NETWORK_NAME:-localhost-dev}
+      TRAEFIK_PROVIDERS_DOCKER_DEFAULTRULE: Host(`{{ normalize .Name }}${BASE_HOSTNAME}`)
+      TRAEFIK_PROVIDERS_FILE_DIRECTORY: /etc/traefik/configuration
+    labels:
+      - traefik.http.routers.traefik.rule=Host(`${TRAEFIK_HOSTNAME:-traefik.localhost}`)
+      - traefik.http.services.traefik.loadbalancer.server.port=8080
+      - traefik.http.routers.traefik.tls=true
+
+networks:
+  default:
+    driver: bridge
+    name: localhost-dev
+    external: true

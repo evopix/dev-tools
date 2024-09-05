@@ -1,0 +1,13 @@
+version: "3"
+
+tasks:
+  init:
+    internal: true
+    desc: Initialize the local certificate
+    status:
+      - test -f etc/traefik/certs/dev-tools.pem
+      - test -f etc/traefik/certs/dev-tools-key.pem
+    cmds:
+      - mkcert -install
+      - mkdir -p etc/traefik/certs
+      - mkcert -cert-file etc/traefik/certs/dev-tools.pem --key-file etc/traefik/certs/dev-tools-key.pem "*${BASE_HOSTNAME}"

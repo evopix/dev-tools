@@ -1,0 +1,18 @@
+version: "3"
+
+tasks:
+  init:
+    internal: true
+    desc: Run docker init steps
+    cmds:
+      - task: init-network
+
+  init-network:
+    internal: true
+    desc: Initializes the docker network for local dev.
+    vars:
+      NETWORK_NAME: '{{ coalesce .NETWORK_NAME "localhost-dev"}}'
+    status:
+      - docker network ls | rg {{ .NETWORK_NAME }}
+    cmds:
+      - docker network create --driver bridge {{ .NETWORK_NAME }}

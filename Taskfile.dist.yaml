@@ -1,0 +1,64 @@
+version: "3"
+
+dotenv: ['.env', '{{.ENV}}/.env.', '{{.HOME}}/.env', '.env.local']
+
+includes:
+  tools:
+    taskfile: ./etc/taskfiles/tools.yaml
+  docker:
+    taskfile: ./etc/taskfiles/docker.yaml
+  cert:
+    taskfile: ./etc/taskfiles/cert.yaml
+  hostnames:
+    taskfile: ./etc/taskfiles/hostnames.yaml
+
+tasks:
+  init:
+    run: once
+    desc: Run setup logic
+    deps: ["check-deps-{{ OS }}"]
+    cmds:
+      - task: tools:install
+      - task: docker:init
+      - task: cert:init
+      - task: hostnames:init
+    
+  up:
+    desc: Start the dev env tools
+    cmds:
+      - docker compose up -d
+
+  down:
+    desc: Stop the dev env tools
+    cmds:
+      - docker compose down
+  
+  check-deps-linux:
+    internal: true
+    preconditions:
+      - sh: uname -a | grep --invert-match 'microsoft-standard-WSL2'
+        msg: |
+          Task should be run from the Host OS, not WSL.
+      - sh: which docker
+        msg: |
+          Docker must be installed.
+  
+  check-deps-darwin:
+    internal: true
+    preconditions:
+      - sh: which docker
+        msg: |
+          Docker must be installed.
+
+  check-deps-windows:
+    internal: true
+    preconditions:
+      - sh: wsl --status
+        msg: |
+          WSL must be setup.
+      - sh: where.exe docker
+        msg: |
+          Docker must be installed.
+      - sh: where.exe git
+        msg: |
+          Git Bash must be installed.

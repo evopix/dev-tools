@@ -1,0 +1,26 @@
+version: "3"
+
+tasks:
+  install:
+    platforms: [darwin, windows]
+    desc: Install tools dependencies
+    cmds:
+      - task: install-{{ OS }}
+
+  install-darwin:
+    internal: true
+    platforms: [darwin]
+    cmds:
+      - brew install mkcert
+      - brew install nss
+      - brew install ripgrep
+
+  install-windows:
+    internal: true
+    platforms: [windows]
+    status:
+      - where.exe mkcert
+    cmds:
+      - winget install --ignore-warnings --disable-interactivity FiloSottile.mkcert
+      - winget install --ignore-warnings --disable-interactivity gerardog.gsudo
+      - winget install --ignore-warnings --disable-interactivity BurntSushi.ripgrep.MSVC
