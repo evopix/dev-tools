@@ -19,10 +19,10 @@ tasks:
   add-hostname:
     run: always
     internal: true
-    label: add-hostname '{{ .HOSTNAME }}'
+    label: add-hostname '{{ .HOSTNAME }}.dev.localhost'
     desc: Adds a single hostname to the hosts file
     status:
-      - rg '{{ .HOSTNAME }}' {{ .HOSTS_FILE }}
+      - rg '{{ .HOSTNAME }}.dev.localhost' {{ .HOSTS_FILE }}
     cmds:
       - |-
-        sudo sh -c 'echo "127.0.0.1   {{ .HOSTNAME }}$BASE_HOSTNAME     # Added by dev-tools" >> {{ .HOSTS_FILE }}'
+        sudo sh -c 'echo "127.0.0.1   {{ .HOSTNAME }}.dev.localhost     # Added by dev-tools" >> {{ .HOSTS_FILE }}'

@@ -10,4 +10,4 @@ tasks:
     cmds:
       - mkcert -install
       - mkdir -p etc/traefik/certs
-      - mkcert -cert-file etc/traefik/certs/dev-tools.pem --key-file etc/traefik/certs/dev-tools-key.pem "*${BASE_HOSTNAME}"
+      - mkcert -cert-file etc/traefik/certs/dev-tools.pem --key-file etc/traefik/certs/dev-tools-key.pem "*.dev.localhost"

@@ -11,7 +11,7 @@ tasks:
     internal: true
     desc: Initializes the docker network for local dev.
     vars:
-      NETWORK_NAME: '{{ coalesce .NETWORK_NAME "localhost-dev"}}'
+      NETWORK_NAME: "localhost-dev"
     status:
       - docker network ls | rg {{ .NETWORK_NAME }}
     cmds:
