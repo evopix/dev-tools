@@ -15,10 +15,10 @@ The local CA is now installed in the system trust store! ⚡️
 Note: Firefox support is not available on your platform. ℹ️
 
 task: [cert:init] mkdir -p etc/traefik/certs
-task: [cert:init] mkcert -cert-file etc/traefik/certs/dev-tools.pem --key-file etc/traefik/certs/dev-tools-key.pem "*.dev.localhost"
+task: [cert:init] mkcert -cert-file etc/traefik/certs/dev-tools.pem --key-file etc/traefik/certs/dev-tools-key.pem "*.test"
 
 Created a new certificate valid for the following names 📜
- - "*.dev.localhost"
+ - "*.test"
    Warning: many browsers don't support second-level wildcards like "*.localhost" ⚠️
 
 Reminder: X.509 wildcards only go one level deep, so this won't match a.b.localhost ℹ️
@@ -27,7 +27,7 @@ The certificate is at "etc/traefik/certs/dev-tools.pem" and the key at "etc/trae
 
 It will expire on 5 December 2026 🗓
 
-task: [add-hostname 'foo'] sudo sh -c 'echo "127.0.0.1   foo.dev.localhost     # Added by dev-tools" >> C:/Windows/System32/drivers/etc/hosts'
+task: [add-hostname 'foo'] sudo sh -c 'echo "127.0.0.1   foo.test     # Added by dev-tools" >> C:/Windows/System32/drivers/etc/hosts'
 
 $ task up
 task: [up] docker compose up -d

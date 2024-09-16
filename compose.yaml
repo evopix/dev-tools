@@ -25,10 +25,10 @@ services:
       TRAEFIK_ENTRYPOINTS_WEBSECURE_FORWARDEDHEADERS_INSECURE: true
       TRAEFIK_PROVIDERS_DOCKER: true
       TRAEFIK_PROVIDERS_DOCKER_NETWORK: localhost-dev
-      TRAEFIK_PROVIDERS_DOCKER_DEFAULTRULE: Host(`{{ normalize .Name }}.dev.localhost`)
+      TRAEFIK_PROVIDERS_DOCKER_DEFAULTRULE: Host(`{{ normalize .Name }}.test`)
       TRAEFIK_PROVIDERS_FILE_DIRECTORY: /etc/traefik/configuration
     labels:
-      - traefik.http.routers.traefik.rule=Host(`traefik.dev.localhost`)
+      - traefik.http.routers.traefik.rule=Host(`traefik.test`)
       - traefik.http.services.traefik.loadbalancer.server.port=8080
       - traefik.http.routers.traefik.tls=true
 

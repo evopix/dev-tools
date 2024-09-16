@@ -10,4 +10,11 @@ tasks:
     cmds:
       - mkcert -install
       - mkdir -p etc/traefik/certs
-      - mkcert -cert-file etc/traefik/certs/dev-tools.pem --key-file etc/traefik/certs/dev-tools-key.pem "*.dev.localhost"
+      - task: make
+  make:
+    desk: Create/updates the local certificate
+    vars:
+      HOSTNAMES:
+        sh: cat hostnames.txt
+    cmds:
+      - mkcert -cert-file etc/traefik/certs/dev-tools.pem --key-file etc/traefik/certs/dev-tools-key.pem {{catLines .HOSTNAMES}} localhost 127.0.0.1 ::1
